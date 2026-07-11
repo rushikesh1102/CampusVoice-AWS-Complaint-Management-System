@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Admin Dashboard</title>
+
+<link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body>
+
+<script>
+if (sessionStorage.getItem("adminLoggedIn") !== "true") {
+    window.location.href = "admin-login.html";
+}
+</script>
+
+<header class="nav">
+
+    <div class="logo">CampusVoice Admin</div>
+
+    <nav>
+
+    <a href="index.html">Home</a>
+
+    <a href="#" onclick="logout()">Logout</a>
+
+</nav>
+
+</header>
+
+<main class="dashboard">
+
+    <div class="stats">
+
+        <div class="stat-card">
+            <h3>Total</h3>
+            <p id="totalCount">0</p>
+        </div>
+
+        <div class="stat-card">
+            <h3>Pending</h3>
+            <p id="pendingCount">0</p>
+        </div>
+
+        <div class="stat-card">
+            <h3>In Progress</h3>
+            <p id="progressCount">0</p>
+        </div>
+
+        <div class="stat-card">
+            <h3>Resolved</h3>
+            <p id="resolvedCount">0</p>
+        </div>
+
+    </div>
+
+    <div class="card">
+
+        <div class="toolbar">
+
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search Complaint ID or Name"
+                onkeyup="searchComplaints()">
+
+            <select
+                id="statusFilter"
+                onchange="filterStatus()">
+
+                <option value="All">All Status</option>
+                <option value="Pending">Pending</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Resolved">Resolved</option>
+
+            </select>
+
+        </div>
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Action</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="complaintsTable">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</main>
+
+<!-- View Complaint Modal -->
+
+<div id="complaintModal" class="modal">
+
+    <div class="modal-content">
+
+        <div class="modal-header">
+
+            <h2>Complaint Details</h2>
+
+            <span class="close">&times;</span>
+
+        </div>
+
+        <div id="modalBody" class="modal-body">
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="admin.js"></script>
+
+<script>
+
+function logout(){
+
+    sessionStorage.removeItem("adminLoggedIn");
+
+    window.location.href="index.html";
+
+}
+
+</script>
+
+</body>
+
+</html>

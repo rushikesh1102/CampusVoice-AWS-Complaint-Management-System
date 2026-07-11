@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Login</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<main class="login-container">
+
+<div class="login-card">
+
+<h2>Admin Login</h2>
+
+<input
+type="text"
+id="username"
+placeholder="Username">
+
+<input
+type="password"
+id="password"
+placeholder="Password">
+
+<button class="btn" onclick="login()">
+Login
+</button>
+
+<p id="error" style="color:red;margin-top:15px;text-align:center;"></p>
+
+</div>
+
+</main>
+
+<script>
+
+const LOGIN_API = "https://87frpah2gl.execute-api.ap-south-1.amazonaws.com/prod/login";
+
+async function login() {
+
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value.trim();
+
+    if(username === "" || password === ""){
+        document.getElementById("error").innerText="Please enter username and password";
+        return;
+    }
+
+    try{
+
+        const response = await fetch(LOGIN_API,{
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json"
+            },
+            body:JSON.stringify({
+                username:username,
+                password:password
+            })
+        });
+
+        const result = await response.json();
+
+        if(result.success){
+
+            sessionStorage.setItem("adminLoggedIn","true");
+
+            window.location.href="admin.html";
+
+        }else{
+
+            document.getElementById("error").innerText=result.message;
+
+        }
+
+    }catch(error){
+
+        document.getElementById("error").innerText="Unable to connect to server.";
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>

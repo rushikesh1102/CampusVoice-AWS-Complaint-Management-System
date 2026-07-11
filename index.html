@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+<title>CampusVoice</title>
+<link rel='stylesheet' href='css/style.css'>
+</head>
+<body>
+<header class='nav'>
+  <div class='logo'>CampusVoice</div>
+  <nav>
+    <a href='complaint-status.html'>Check Status</a>
+    <a href='admin-login.html'>Admin</a>
+  </nav>
+</header>
+
+<section class='hero'>
+  <div class='hero-content'>
+    <h1>CampusVoice</h1>
+    <p>Serverless Student Complaint Management System powered by AWS</p>
+  </div>
+</section>
+
+<main class='container'>
+  <div class='card'>
+    <h2>Submit a Complaint</h2>
+    <form id='complaintForm'>
+      <div class='grid'>
+        <input type='text' id='name' placeholder='Full Name' required>
+        <input type='email' id='email' placeholder='Email Address' required>
+      </div>
+
+      <div class='grid'>
+        <input type='text' id='department' placeholder='Department' required>
+        <select id='category' required>
+          <option value=''>Select Category</option>
+          <option>Wi-Fi</option>
+          <option>Library</option>
+          <option>Hostel</option>
+          <option>Canteen</option>
+          <option>Classroom</option>
+          <option>Other</option>
+        </select>
+      </div>
+
+      <textarea id='description' rows='5' placeholder='Describe your complaint' required></textarea>
+
+      <button type='submit' class='btn'>Submit Complaint</button>
+    </form>
+
+    <div id='successBox' class='success-box hidden'>
+      <h3>Complaint Submitted Successfully</h3>
+      <p>Your Complaint ID:</p>
+      <div id='complaintId' class='complaint-id'></div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <p>CampusVoice • AWS Serverless Project</p>
+</footer>
+
+<script src='js/script.js'></script>
+</body>
+</html>
