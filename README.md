@@ -1,18 +1,74 @@
-CampusVoice Professional Frontend
+# CampusVoice | AWS Complaint Management System
 
-Pages:
-1. index.html - Student complaint submission
-2. complaint-status.html - Check complaint status
-3. admin-login.html - Admin login
-4. admin.html - Admin dashboard
+## Overview
 
-Connect to AWS:
-1. Create API Gateway
-2. Replace YOUR_API_GATEWAY_URL in js/script.js
-3. Upload all files to Amazon S3 static website hosting
+CampusVoice is a cloud-based complaint management system developed using AWS serverless services. It allows students to submit complaints online while providing administrators with a secure dashboard to manage and track complaint statuses.
 
-Recommended AWS Services:
+---
+
+## Features
+
+- Student complaint submission
+- Admin login authentication
+- Complaint dashboard
+- Search complaints by ID or Name
+- Filter complaints by status
+- Update complaint status
+- View complete complaint details
+- Responsive user interface
+- Serverless AWS architecture
+
+---
+
+## AWS Services Used
+
 - Amazon S3
-- API Gateway
+- Amazon API Gateway
 - AWS Lambda
 - Amazon DynamoDB
+
+---
+
+## Technologies Used
+
+- HTML5
+- CSS3
+- JavaScript
+- AWS Cloud Services
+
+---
+
+## Project Structure
+
+```
+CampusVoice
+│
+├── index.html
+├── admin.html
+├── admin-login.html
+├── complaint-status.html
+├── css/
+├── js/
+└── README.md
+```
+
+---
+
+## Future Improvements
+
+- Dashboard charts
+- Email notifications
+- File attachment support
+- Complaint priority management
+- Admin analytics
+- Export complaints to CSV
+
+---
+
+## Author
+
+Rushikesh
+
+B.Sc. Information Technology
+
+AWS Cloud Project
