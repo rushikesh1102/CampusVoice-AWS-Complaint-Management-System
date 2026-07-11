@@ -72,3 +72,34 @@ Rushikesh
 B.Sc. Information Technology
 
 AWS Cloud Project
+---
+
+# Project Screenshots
+
+## Home Page
+
+![Home Page](images/home-page.png)
+
+---
+
+## Admin Login
+
+![Admin Login](images/admin-login.png)
+
+---
+
+## Admin Dashboard
+
+![Admin Dashboard](images/admin-dashboard.png)
+
+---
+
+## View Complaint
+
+![View Complaint](images/view-complaint.png)
+
+---
+
+## Complaint Status
+
+![Complaint Status](images/complaint-status.png)
