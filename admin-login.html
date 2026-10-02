@@ -1,84 +1,150 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Admin Login</title>
+
 <link rel="stylesheet" href="css/style.css">
+
 </head>
 
 <body>
 
 <main class="login-container">
 
-<div class="login-card">
+    <div class="login-card">
 
-<h2>Admin Login</h2>
+        <h2>Admin Login</h2>
 
-<input
-type="text"
-id="username"
-placeholder="Username">
+        <button class="btn" onclick="login()">
+            Login with Cognito
+        </button>
 
-<input
-type="password"
-id="password"
-placeholder="Password">
+        <p
+            id="error"
+            style="color:red;margin-top:15px;text-align:center;"
+        ></p>
 
-<button class="btn" onclick="login()">
-Login
-</button>
-
-<p id="error" style="color:red;margin-top:15px;text-align:center;"></p>
-
-</div>
+    </div>
 
 </main>
 
 <script>
 
-const LOGIN_API = "https://87frpah2gl.execute-api.ap-south-1.amazonaws.com/prod/login";
+const COGNITO_DOMAIN =
+    "https://ap-south-1bihzls03x.auth.ap-south-1.amazoncognito.com";
 
+const CLIENT_ID =
+    "ra1et1kqp9lt3v9g1b5hbahq1";
+
+const REDIRECT_URI =
+    "https://d3myim0g3fz9he.cloudfront.net/cognito-callback.html";
+
+const SCOPES =
+    "openid email phone";
+
+
+// Generate random PKCE verifier
+function generateCodeVerifier() {
+
+    const array = new Uint8Array(32);
+
+    crypto.getRandomValues(array);
+
+    return Array.from(array)
+        .map(byte => byte.toString(16).padStart(2, "0"))
+        .join("");
+
+}
+
+
+// Convert ArrayBuffer to Base64URL
+function base64UrlEncode(buffer) {
+
+    let binary = "";
+
+    const bytes = new Uint8Array(buffer);
+
+    bytes.forEach(byte => {
+
+        binary += String.fromCharCode(byte);
+
+    });
+
+    return btoa(binary)
+        .replace(/\+/g, "-")
+        .replace(/\//g, "_")
+        .replace(/=+$/, "");
+
+}
+
+
+// Generate PKCE challenge
+async function generateCodeChallenge(verifier) {
+
+    const data =
+        new TextEncoder().encode(verifier);
+
+    const digest =
+        await crypto.subtle.digest(
+            "SHA-256",
+            data
+        );
+
+    return base64UrlEncode(digest);
+
+}
+
+
+// Start Cognito login
 async function login() {
 
-    const username = document.getElementById("username").value.trim();
-    const password = document.getElementById("password").value.trim();
+    try {
 
-    if(username === "" || password === ""){
-        document.getElementById("error").innerText="Please enter username and password";
-        return;
+        const verifier =
+            generateCodeVerifier();
+
+        const challenge =
+            await generateCodeChallenge(verifier);
+
+
+        // Save verifier for callback
+
+        sessionStorage.setItem(
+            "pkce_verifier",
+            verifier
+        );
+
+
+        const loginURL =
+            COGNITO_DOMAIN +
+            "/oauth2/authorize" +
+            "?response_type=code" +
+            "&client_id=" +
+            encodeURIComponent(CLIENT_ID) +
+            "&redirect_uri=" +
+            encodeURIComponent(REDIRECT_URI) +
+            "&scope=" +
+            encodeURIComponent(SCOPES) +
+            "&code_challenge=" +
+            encodeURIComponent(challenge) +
+            "&code_challenge_method=S256";
+
+
+        window.location.href = loginURL;
+
     }
 
-    try{
+    catch (error) {
 
-        const response = await fetch(LOGIN_API,{
-            method:"POST",
-            headers:{
-                "Content-Type":"application/json"
-            },
-            body:JSON.stringify({
-                username:username,
-                password:password
-            })
-        });
+        console.error(error);
 
-        const result = await response.json();
-
-        if(result.success){
-
-            sessionStorage.setItem("adminLoggedIn","true");
-
-            window.location.href="admin.html";
-
-        }else{
-
-            document.getElementById("error").innerText=result.message;
-
-        }
-
-    }catch(error){
-
-        document.getElementById("error").innerText="Unable to connect to server.";
+        document.getElementById("error").innerText =
+            "Unable to start login.";
 
     }
 
@@ -87,4 +153,5 @@ async function login() {
 </script>
 
 </body>
+
 </html>
