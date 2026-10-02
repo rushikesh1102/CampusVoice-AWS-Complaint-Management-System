@@ -1,20 +1,29 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Complaint Status</title>
+
 <link rel="stylesheet" href="css/style.css">
+
 </head>
 
 <body>
 
 <header class="nav">
+
     <div class="logo">CampusVoice</div>
+
     <nav>
         <a href="index.html">Home</a>
     </nav>
+
 </header>
+
 
 <main class="container">
 
@@ -23,6 +32,7 @@
         <h2>Check Complaint Status</h2>
 
         <div class="search-box">
+
             <input
                 type="text"
                 id="searchId"
@@ -32,7 +42,9 @@
             <button class="btn" onclick="checkStatus()">
                 Check Status
             </button>
+
         </div>
+
 
         <div id="statusResult" class="status-card hidden">
 
@@ -77,67 +89,129 @@
 
 </main>
 
+
 <script>
 
-const API_URL = "https://87frpah2gl.execute-api.ap-south-1.amazonaws.com/prod/complaints";
+const API_URL =
+    "https://87frpah2gl.execute-api.ap-south-1.amazonaws.com/prod/complaints";
+
 
 async function checkStatus() {
 
-    const id = document.getElementById("searchId").value.trim();
+    const id =
+        document.getElementById("searchId")
+        .value
+        .trim();
+
 
     if (id === "") {
+
         alert("Please enter a Complaint ID.");
+
         return;
     }
 
+
     try {
 
-        const response = await fetch(API_URL);
+        const response = await fetch(
+            `${API_URL}/${encodeURIComponent(id)}`
+        );
 
-        if (!response.ok) {
-            throw new Error("Unable to fetch complaints.");
-        }
 
-        const complaints = await response.json();
+        if (response.status === 404) {
 
-        const complaint = complaints.find(c => c.ComplaintID === id);
-
-        if (!complaint) {
             alert("Complaint not found.");
+
             return;
         }
 
-        document.getElementById("resultId").textContent = complaint.ComplaintID;
-        document.getElementById("resultName").textContent = complaint.Name;
-        document.getElementById("resultDepartment").textContent = complaint.Department;
-        document.getElementById("resultCategory").textContent = complaint.Category;
-        document.getElementById("resultDescription").textContent = complaint.Description;
-        document.getElementById("resultDate").textContent = complaint.CreatedDate;
 
-        const badge = document.getElementById("resultStatus");
+        if (!response.ok) {
 
-        badge.textContent = complaint.Status;
+            throw new Error(
+                "Unable to fetch complaint."
+            );
+        }
+
+
+        const complaint =
+            await response.json();
+
+
+        document.getElementById("resultId")
+            .textContent =
+            complaint.ComplaintID || "";
+
+
+        document.getElementById("resultName")
+            .textContent =
+            complaint.Name || "";
+
+
+        document.getElementById("resultDepartment")
+            .textContent =
+            complaint.Department || "";
+
+
+        document.getElementById("resultCategory")
+            .textContent =
+            complaint.Category || "";
+
+
+        document.getElementById("resultDescription")
+            .textContent =
+            complaint.Description || "";
+
+
+        document.getElementById("resultDate")
+            .textContent =
+            complaint.CreatedDate || "";
+
+
+        const badge =
+            document.getElementById("resultStatus");
+
+
+        badge.textContent =
+            complaint.Status || "";
+
 
         badge.className = "badge";
 
+
         if (complaint.Status === "Pending") {
+
             badge.classList.add("pending");
-        }
-        else if (complaint.Status === "In Progress") {
-            badge.classList.add("progress");
-        }
-        else if (complaint.Status === "Resolved") {
-            badge.classList.add("resolved");
+
         }
 
-        document.getElementById("statusResult").classList.remove("hidden");
+        else if (complaint.Status === "In Progress") {
+
+            badge.classList.add("progress");
+
+        }
+
+        else if (complaint.Status === "Resolved") {
+
+            badge.classList.add("resolved");
+
+        }
+
+
+        document.getElementById("statusResult")
+            .classList.remove("hidden");
 
     }
+
 
     catch (error) {
 
         console.error(error);
-        alert("Something went wrong while fetching complaint details.");
+
+        alert(
+            "Something went wrong while fetching complaint details."
+        );
 
     }
 
@@ -146,4 +220,6 @@ async function checkStatus() {
 </script>
 
 </body>
+
 </html>
+```
