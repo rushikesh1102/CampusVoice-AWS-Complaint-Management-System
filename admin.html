@@ -15,7 +15,7 @@
 <body>
 
 <script>
-if (sessionStorage.getItem("adminLoggedIn") !== "true") {
+if (!sessionStorage.getItem("cognitoIdToken")) {
     window.location.href = "admin-login.html";
 }
 </script>
@@ -139,15 +139,20 @@ if (sessionStorage.getItem("adminLoggedIn") !== "true") {
 <script src="admin.js"></script>
 
 <script>
+function logout() {
+    sessionStorage.removeItem("cognitoIdToken");
+    sessionStorage.removeItem("cognitoAccessToken");
+    sessionStorage.removeItem("cognitoRefreshToken");
+    sessionStorage.removeItem("pkce_verifier");
 
-function logout(){
+    const logoutURL =
+        "https://ap-south-1bihzls03x.auth.ap-south-1.amazoncognito.com/logout" +
+        "?client_id=ra1et1kqp9lt3v9g1b5hbahq1" +
+        "&logout_uri=" +
+        encodeURIComponent("https://d3myim0g3fz9he.cloudfront.net/index.html");
 
-    sessionStorage.removeItem("adminLoggedIn");
-
-    window.location.href="index.html";
-
+    window.location.href = logoutURL;
 }
-
 </script>
 
 </body>
