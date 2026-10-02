@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signing in...</title>
+</head>
+
+<body>
+
+    <p id="message" style="text-align:center; margin-top:50px;">
+        Signing you in...
+    </p>
+
+    <script>
+
+        const COGNITO_DOMAIN =
+            "https://ap-south-1bihzls03x.auth.ap-south-1.amazoncognito.com";
+
+        const CLIENT_ID =
+            "ra1et1kqp9lt3v9g1b5hbahq1";
+
+        const REDIRECT_URI =
+            "https://d3myim0g3fz9he.cloudfront.net/cognito-callback.html";
+
+
+        async function handleCallback() {
+
+            const params =
+                new URLSearchParams(window.location.search);
+
+            const code =
+                params.get("code");
+
+            const error =
+                params.get("error");
+
+            const verifier =
+                sessionStorage.getItem("pkce_verifier");
+
+
+            // Check for Cognito error
+            if (error) {
+
+                document.getElementById("message").innerHTML =
+                    "Login failed: " +
+                    (params.get("error_description") || error);
+
+                return;
+            }
+
+
+            // Check authorization code
+            if (!code) {
+
+                document.getElementById("message").innerText =
+                    "Login failed. Authorization code not found.";
+
+                return;
+            }
+
+
+            // Check PKCE verifier
+            if (!verifier) {
+
+                document.getElementById("message").innerText =
+                    "Login failed. PKCE verifier not found.";
+
+                return;
+            }
+
+
+            try {
+
+                const response = await fetch(
+                    COGNITO_DOMAIN + "/oauth2/token",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/x-www-form-urlencoded"
+                        },
+
+                        body: new URLSearchParams({
+
+                            grant_type:
+                                "authorization_code",
+
+                            client_id:
+                                CLIENT_ID,
+
+                            code:
+                                code,
+
+                            redirect_uri:
+                                REDIRECT_URI,
+
+                            code_verifier:
+                                verifier
+                        })
+                    }
+                );
+
+
+                const tokens =
+                    await response.json();
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        tokens.error_description ||
+                        tokens.error ||
+                        "Token exchange failed"
+                    );
+                }
+
+
+                // Save tokens
+                sessionStorage.setItem(
+                    "cognitoIdToken",
+                    tokens.id_token
+                );
+
+                sessionStorage.setItem(
+                    "cognitoAccessToken",
+                    tokens.access_token
+                );
+
+
+                if (tokens.refresh_token) {
+
+                    sessionStorage.setItem(
+                        "cognitoRefreshToken",
+                        tokens.refresh_token
+                    );
+
+                }
+
+
+                // Remove PKCE verifier
+                sessionStorage.removeItem(
+                    "pkce_verifier"
+                );
+
+
+                // Go to admin dashboard
+                window.location.href =
+                    "admin.html";
+
+            }
+
+            catch (error) {
+
+                console.error(error);
+
+                document.getElementById("message").innerHTML =
+                    "Login failed.<br><br>" +
+                    error.message;
+
+            }
+
+        }
+
+
+        handleCallback();
+
+    </script>
+
+</body>
+
+</html>
